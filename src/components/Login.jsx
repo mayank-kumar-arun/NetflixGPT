@@ -1,6 +1,11 @@
 import React, { useRef, useState } from "react";
 import Header from "./Header";
 import { ValidateForm } from "../utils/validate";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { auth } from "../utils/firebase";
 
 const Login = () => {
   const [isSignInForm, setisSignInForm] = useState(true);
@@ -14,10 +19,49 @@ const Login = () => {
     const message = ValidateForm(
       email.current.value,
       password.current.value,
-      name.current.value
+    //   name.current.value
     );
     console.log("message", message, name);
     setErrorMMessage(message);
+
+    if (message) return;
+
+    if (!isSignInForm) {
+      createUserWithEmailAndPassword(
+        auth,
+        email.current.value,
+        password.current.value
+      )
+        .then((userCredential) => {
+          // Signed up
+          const user = userCredential.user;
+          console.log(user);
+          // ...
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErrorMMessage(errorCode + "-" + errorMessage);
+          // ..
+        });
+    } else {
+      signInWithEmailAndPassword(
+        auth,
+        email.current.value,
+        password.current.value
+      )
+        .then((userCredential) => {
+          // Signed in
+          const user = userCredential.user;
+          console.log(user);
+          // ...
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErrorMMessage(errorCode + "-" + errorMessage);
+        });
+    }
   };
   const toggleSignInForm = () => {
     setisSignInForm(!isSignInForm);
@@ -58,7 +102,9 @@ const Login = () => {
           placeholder="Enter Password"
           className="p-4 my-4 w-full bg-gray-600"
         ></input>
-        {errorMessage && <p className="py-2 text-red-500 text-lg">{errorMessage}</p>}
+        {errorMessage && (
+          <p className="py-2 text-red-500 text-lg">{errorMessage}</p>
+        )}
         <button
           className="p-4 my-6 bg-red-700 w-full"
           onClick={handleFormSubmit}
