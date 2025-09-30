@@ -55,11 +55,11 @@ const Header = () => {
     dispatch(changeLanguage(e.target.value));
   };
   return (
-    <div className="absolute flex justify-between w-full px-8 py-2 bg-gradient-to-b from-black z-10">
-      <img className="w-44" src={LOGO} alt="logo" />
+    <div className="absolute mx-0 flex flex-col justify-between w-full px-4 md:px-8 py-2 bg-gradient-to-b from-black z-10 md:flex-row">
+      <img className="w-44 mx-auto md:mx-0" src={LOGO} alt="logo" />
 
       {user && (
-        <div className="flex p-2">
+        <div className="flex justify-between p-2">
           {gptToggle && (
             <select
               className="bg-gray-900 p-2 m-2 text-white"
@@ -75,14 +75,14 @@ const Header = () => {
             </select>
           )}
           <button
-            className="bg-purple-600 my-2 mx-4 px-5 text-white cursor-pointer rounded-lg"
+            className="bg-purple-600 my-2 mx-4 px-5 py-2 md:py-0 text-white cursor-pointer rounded-lg"
             onClick={handleGPTSearchToggle}
           >
             {gptToggle ? "Home" : "GPT Search"}
           </button>
           <img
             alt="profie Image"
-            className="w-12 h-12"
+            className="hidden md:block w-12 h-12"
             src={user.photoURL}
           ></img>
           <button
