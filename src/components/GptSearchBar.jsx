@@ -40,7 +40,7 @@ const GptSearchBar = () => {
     setLoading(false);
   };
   return (
-    <div className="pt-[35%] md:pt-[10%] flex justify-center">
+    <div className="pt-[40%] md:pt-[10%] flex justify-center">
       <form
         className="w-full md:w-1/2 bg-black grid grid-cols-12 "
         onSubmit={(e) => e.preventDefault()}
@@ -52,7 +52,7 @@ const GptSearchBar = () => {
           placeholder={lang[language].gptSearchPlaceholder}
         ></input>
         <button
-          className="col-span-3 py-2 px-4 m-4 bg-red-700 text-white rounded-lg cursor-pointer"
+          className="col-span-3 py-2 px-2 md:px-4 my-4 mx-2 md:m-4 bg-red-700 text-white rounded-lg cursor-pointer"
           onClick={HandleSearchSubmit}
         >
           {loading ? "Loading..." : lang[language].search}
