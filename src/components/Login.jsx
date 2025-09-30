@@ -17,6 +17,7 @@ const Login = () => {
   const [errorMessage, setErrorMMessage] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
 
   const email = useRef(null);
   const password = useRef(null);
@@ -28,11 +29,10 @@ const Login = () => {
       password.current.value
       //   name.current.value
     );
-    console.log("message", message, name);
     setErrorMMessage(message);
 
     if (message) return;
-
+    setLoading(true);
     if (!isSignInForm) {
       createUserWithEmailAndPassword(
         auth,
@@ -42,7 +42,6 @@ const Login = () => {
         .then((userCredential) => {
           // Signed up
           const user = userCredential.user;
-          console.log(user);
 
           // ...
           updateProfile(user, {
@@ -62,17 +61,20 @@ const Login = () => {
                 })
               );
               navigate("/browse");
+              setLoading(false);
             })
             .catch((error) => {
               // An error occurred
               // ...
               setErrorMMessage(error);
+              setLoading(false);
             });
         })
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
           setErrorMMessage(errorCode + "-" + errorMessage);
+          setLoading(false);
           // ..
         });
     } else {
@@ -81,18 +83,18 @@ const Login = () => {
         email.current.value,
         password.current.value
       )
-        .then((userCredential) => {
-          // Signed in
-          const user = userCredential.user;
-          console.log(user);
+        .then(() => {
+          // Signed i
           // ...
 
           navigate("/browse");
+          setLoading(false);
         })
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
           setErrorMMessage(errorCode + "-" + errorMessage);
+          setLoading(false);
         });
     }
   };
@@ -142,8 +144,11 @@ const Login = () => {
         <button
           className="p-4 my-6 bg-red-700 w-full"
           onClick={handleFormSubmit}
+          disabled={loading}
         >
-          {isSignInForm ? "Sign In" : "Sign Up"}
+          {isSignInForm
+            ? `${loading ? "Signing In..." : "Sign In"} `
+            : `${loading ? "Signing Up..." : "Sign Up"} `}
         </button>
         <p className="py-4 cursor-pointer" onClick={toggleSignInForm}>
           {isSignInForm

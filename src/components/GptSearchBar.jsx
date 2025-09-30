@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { lang } from "../utils/langConstants";
 import model from "../utils/openAi";
@@ -9,6 +9,7 @@ const GptSearchBar = () => {
   const dispatch = useDispatch();
   const language = useSelector((state) => state.config.language);
   const SearchText = useRef(null);
+  const [loading, setLoading] = useState(false);
 
   const getTMDBMovies = async (movie) => {
     const data = await fetch(
@@ -20,6 +21,7 @@ const GptSearchBar = () => {
   };
 
   const HandleSearchSubmit = async () => {
+    setLoading(true);
     const query =
       "Act as a Movie Recommendation system and suggest some movies for the query : " +
       SearchText.current.value +
@@ -32,10 +34,10 @@ const GptSearchBar = () => {
     const movieArray = cleanedText.split(",");
     const ResultPromises = movieArray.map((movie) => getTMDBMovies(movie));
     const resultMovies = await Promise.all(ResultPromises);
-    console.log(cleanedText, movieArray, resultMovies);
     dispatch(
       addgptMovies({ movieResults: resultMovies, movieSearch: movieArray })
     );
+    setLoading(false);
   };
   return (
     <div className="pt-[35%] md:pt-[10%] flex justify-center">
@@ -53,7 +55,7 @@ const GptSearchBar = () => {
           className="col-span-3 py-2 px-4 m-4 bg-red-700 text-white rounded-lg cursor-pointer"
           onClick={HandleSearchSubmit}
         >
-          {lang[language].search}
+          {loading ? "Loading..." : lang[language].search}
         </button>
       </form>
     </div>

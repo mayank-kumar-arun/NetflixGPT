@@ -5,7 +5,6 @@ const VideoBackground = ({ movieId }) => {
   useTrailerVideo(movieId);
   const trailer = useSelector((state) => state.movies?.movietrailer);
 
-  console.log(trailer);
   return (
     <div>
       <iframe
